@@ -37,3 +37,10 @@ class PortsModelTestCase(TestCase):
         self.assertEqual(port.code, 'TCODE')
         self.assertEqual(port.name, 'Test Port')
         self.assertEqual(port.parent_slug, self.region)
+
+    def test_str_method(self):
+        """
+        Test that the __str__ method returns the port code correctly
+        """
+        port = Ports.objects.get(code="TCODE")
+        self.assertEqual(str(port), "TCODE")
