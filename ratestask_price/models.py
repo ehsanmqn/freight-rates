@@ -29,7 +29,7 @@ class Prices(models.Model):
         :param destins: Destination ports code
         :param date_from: Date from in YYY-MM-DD format
         :param date_to: Date to in YYY-MM-DD format
-        :return: Database query
+        :return: List of data
         """
         with connection.cursor() as cursor:
             cursor.execute("SELECT DATE(dates.day) AS day, COALESCE(AVG(prices.price), NULL) AS average_price "
@@ -42,6 +42,45 @@ class Prices(models.Model):
                            "HAVING COUNT(prices.price) >= 3 OR COUNT(prices.price) = 0 ", [date_from, date_to,
                                                                                            origins, destins,
                                                                                            date_from, date_to])
+            rows = cursor.fetchall()
+
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in rows]
+
+        return data
+
+    @classmethod
+    def get_avg_daily_prices_v2(cls, origins, destins, date_from, date_to):
+        """
+        This class methode queries for average daily prices by giving dates, origins, and destinations. This function
+        contains full date sequence between the given dates.
+        :param origins: Origin port code or parent slug
+        :param destins: Destination port code or parent slug
+        :param date_from: Date from in YYY-MM-DD format
+        :param date_to: Date to in YYY-MM-DD format
+        :return: List of data
+        """
+
+        query = """
+                WITH 
+                  origin_codes AS (
+                    SELECT code FROM ports WHERE code IN ('{}') OR parent_slug IN ('{}')
+                  ),
+                  dest_codes AS (
+                    SELECT code FROM ports WHERE code IN ('{}') OR parent_slug IN ('{}')
+                  )
+                SELECT DATE(dates.day) AS day, COALESCE(AVG(prices.price), NULL) AS average_price
+                FROM (SELECT generate_series('{}'::date, '{}'::date, '1 day') AS day) AS dates
+                LEFT JOIN prices ON prices.orig_code IN (SELECT code FROM origin_codes)
+                AND prices.dest_code IN (SELECT code FROM dest_codes)
+                AND DATE(prices.day) = dates.day
+                WHERE dates.day BETWEEN '{}'::date AND '{}'::date
+                GROUP BY dates.day
+                HAVING COUNT(prices.price) >= 3 OR COUNT(prices.price) = 0;
+            """.format(origins, origins, destins, destins, date_from, date_to, date_from, date_to)
+
+        with connection.cursor() as cursor:
+            cursor.execute(query)
             rows = cursor.fetchall()
 
         columns = [col[0] for col in cursor.description]
