@@ -40,4 +40,7 @@ class Prices(models.Model):
                            "GROUP BY day", [origins, destins, date_from, date_to])
             rows = cursor.fetchall()
 
-        return rows
+        columns = [col[0] for col in cursor.description]
+        data = [dict(zip(columns, row)) for row in rows]
+
+        return data
