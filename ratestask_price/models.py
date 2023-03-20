@@ -69,22 +69,22 @@ class Prices(models.Model):
         query = """
                 WITH 
                   origin_codes AS (
-                    SELECT code FROM ports WHERE code IN ('{}') OR parent_slug IN ('{}')
+                    SELECT code FROM ports WHERE code IN ('{0}') OR parent_slug IN ('{0}')
                   ),
                   dest_codes AS (
-                    SELECT code FROM ports WHERE code IN ('{}') OR parent_slug IN ('{}')
+                    SELECT code FROM ports WHERE code IN ('{1}') OR parent_slug IN ('{1}')
                   )
                 SELECT DATE(dates.day) AS day, 
                 CASE 
                     WHEN COUNT(prices.price) >= 3 THEN COALESCE(ROUND(AVG(prices.price)), NULL)
                 END AS average_price
-                FROM (SELECT generate_series('{}'::date, '{}'::date, '1 day') AS day) AS dates
+                FROM (SELECT generate_series('{2}'::date, '{3}'::date, '1 day') AS day) AS dates
                 LEFT JOIN prices ON prices.orig_code IN (SELECT code FROM origin_codes)
                 AND prices.dest_code IN (SELECT code FROM dest_codes)
                 AND DATE(prices.day) = dates.day
-                WHERE dates.day BETWEEN '{}'::date AND '{}'::date
+                WHERE dates.day BETWEEN '{2}'::date AND '{3}'::date
                 GROUP BY dates.day;
-            """.format(origins, origins, destins, destins, date_from, date_to, date_from, date_to)
+            """.format(origins, destins, date_from, date_to)
 
         with connection.cursor() as cursor:
             cursor.execute(query)
