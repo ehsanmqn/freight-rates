@@ -25,14 +25,15 @@ class ListDailyAveragePrice(APIView):
         origin = data.get('origin')
         destination = data.get('destination')
 
-        print(">>>> ", date_from, date_to, origin, destination)
-
+        # Bundle port codes as a tuple to feed them to the query
         origins = tuple([item[0] for item in origin])
         destins = tuple([item[0] for item in destination])
 
+        # Query for getting average prices per day
         queryset = Prices.get_avg_daily_prices(origins=origins, destins=destins,
                                                date_from=date_from, date_to=date_to)
 
+        # Serialize output data
         serialized_data = ListDailyAveragePriceOutputSerializer(queryset, many=True,
                                                                 context={"request": request}).data
 
