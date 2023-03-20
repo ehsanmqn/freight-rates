@@ -13,14 +13,14 @@ class ListDailyAveragePriceInputSerializerV1(serializers.Serializer):
     destination = serializers.CharField(required=True, allow_blank=False, allow_null=False)
 
     def validate_origin(self, value):
-        origin = Ports.get_ports_by_code_or_slug(code_slug=value)
+        origin = Ports.get_ports_by_code_or_slug(value=value)
 
         if len(origin) == 0:
             raise serializers.ValidationError("Invalid origin port symbol.")
         return origin
 
     def validate_destination(self, value):
-        destination = Ports.get_ports_by_code_or_slug(code_slug=value)
+        destination = Ports.get_ports_by_code_or_slug(value=value)
 
         if len(destination) == 0:
             raise serializers.ValidationError("Invalid destination port symbol.")

@@ -26,7 +26,7 @@ class Ports(models.Model):
         return f'{self.code}'
 
     @classmethod
-    def get_ports_by_code_or_slug(cls, code_slug):
+    def get_ports_by_code_or_slug(cls, value):
         """
         This class method return ports by making query based on their code or parent slug
         :param code: Port code
@@ -41,7 +41,7 @@ class Ports(models.Model):
             WHERE regions.parent_slug = '{0}' 
                 OR ports.parent_slug = '{0}' 
                 OR ports.code = '{0}'
-        """.format(code_slug)
+        """.format(value)
 
         with connection.cursor() as cursor:
             cursor.execute(query)
