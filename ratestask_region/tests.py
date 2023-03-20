@@ -34,3 +34,13 @@ class RegionsTestCase(TestCase):
                 slug="europe",
                 name="New Europe"
             )
+
+    def test_name_max_length(self):
+        """
+        Test that the name field has the correct max length
+        """
+        with self.assertRaises(Exception):
+            Regions.objects.create(
+                slug="europe",
+                name="Europen" * 20,
+            )
