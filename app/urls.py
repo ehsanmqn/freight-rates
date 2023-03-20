@@ -4,8 +4,7 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 
-from ratestask_price.views import ListDailyAveragePriceV1
-
+from ratestask_price.views import ListDailyAveragePriceV1, ListDailyAveragePriceV2
 
 #
 # Version 1 APIs
@@ -16,11 +15,12 @@ api_patterns_v1 = [
 #
 # Version 1 APIs
 api_patterns_v2 = [
-    path("rates/", ListDailyAveragePriceV1.as_view(), name="list-daily-average-price-v2")
+    path("rates/", ListDailyAveragePriceV2.as_view(), name="list-daily-average-price-v2")
 ]
 
 api_patterns = [
     path("v1/", include(api_patterns_v1), name="api-v1"),
+    path("v2/", include(api_patterns_v1), name="api-v2"),
 ]
 
 urlpatterns = [
