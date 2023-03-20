@@ -38,10 +38,10 @@ class Ports(models.Model):
             SELECT ports.code FROM ports
             RIGHT JOIN regions
             ON regions.slug = ports.parent_slug
-            WHERE regions.parent_slug = '{}' 
-                OR ports.parent_slug = '{}' 
-                OR ports.code = '{}'
-        """.format(code_slug, code_slug, code_slug, code_slug)
+            WHERE regions.parent_slug = '{0}' 
+                OR ports.parent_slug = '{0}' 
+                OR ports.code = '{0}'
+        """.format(code_slug)
 
         with connection.cursor() as cursor:
             cursor.execute(query)
