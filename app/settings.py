@@ -167,3 +167,5 @@ CORS_ORIGIN_WHITELIST = (
 )
 
 # Applications specific constants
+REGION_SLUG_MAX_LENGTH = 128
+REGION_NAME_MAX_LENGTH = 128
