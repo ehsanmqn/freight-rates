@@ -58,3 +58,17 @@ class PortsModelTestCase(TestCase):
                     name="Test Region"
                 )
             )
+
+    def test_code_max_length(self):
+        """
+        Test that the code field has the correct max length
+        """
+        with self.assertRaises(Exception):
+            Ports.objects.create(
+                code="TCODE" * 10,
+                name="Test Port",
+                parent_slug=Regions.objects.create(
+                    slug="test_region",
+                    name="Test Region"
+                )
+            )
