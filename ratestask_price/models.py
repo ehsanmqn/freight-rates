@@ -22,7 +22,7 @@ class Prices(models.Model):
         return f'{self.price}'
 
     @classmethod
-    def get_avg_daily_prices(cls, origins, destins, date_from, date_to):
+    def get_avg_daily_prices_v1(cls, origins, destins, date_from, date_to):
         """
         This class methode queries for average daily prices by giving dates, origins, and destinations.
         :param origins: Origin ports code

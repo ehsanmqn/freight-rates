@@ -31,8 +31,8 @@ class ListDailyAveragePrice(APIView):
 
         try:
             # Query for getting average prices per day
-            queryset = Prices.get_avg_daily_prices(origins=origins, destins=destins,
-                                                   date_from=date_from, date_to=date_to)
+            queryset = Prices.get_avg_daily_prices_v1(origins=origins, destins=destins,
+                                                      date_from=date_from, date_to=date_to)
         except Exception as e:
             return Response({
                 "code": status.HTTP_417_EXPECTATION_FAILED,
