@@ -96,3 +96,18 @@ class PortsModelTestCase(TestCase):
             name="Test Port2"
         )
         self.assertIsNone(port.parent_slug)
+
+    def test_related_name(self):
+        """
+        Test that the related_name argument for parent_slug is set correctly
+        """
+        region = Regions.objects.create(
+            slug="mediterranean",
+            name="Mediterranean"
+        )
+        port = Ports.objects.create(
+            code="TCOD3",
+            name="Barcelona",
+            parent_slug=region
+        )
+        self.assertIn(port, region.port_region.all())
