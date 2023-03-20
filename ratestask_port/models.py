@@ -35,9 +35,13 @@ class Ports(models.Model):
         """
 
         query = """
-            SELECT * FROM ports 
-            WHERE code = '{}' OR parent_slug = '{}'
-        """.format(code, slug)
+            SELECT ports.code FROM ports
+            RIGHT JOIN regions
+            ON regions.slug = ports.parent_slug
+            WHERE regions.parent_slug = '{}' 
+                OR ports.parent_slug = '{}' 
+                OR ports.code = '{}'
+        """.format(code, code, code, code)
 
         with connection.cursor() as cursor:
             cursor.execute(query)
