@@ -24,3 +24,13 @@ class RegionsTestCase(TestCase):
         """
         region = Regions.objects.get(slug="europe")
         self.assertEqual(str(region), "europe")
+
+    def test_unique_slug(self):
+        """
+        Test whether the slug field is unique
+        """
+        with self.assertRaises(Exception):
+            Regions.objects.create(
+                slug="europe",
+                name="New Europe"
+            )
