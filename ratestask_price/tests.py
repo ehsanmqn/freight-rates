@@ -21,3 +21,11 @@ class PricesModelTest(TestCase):
             day=date.today(),
             price=1000,
         )
+
+    def test_orig_code_label(self):
+        """
+        Test verbose name of the orig_code
+        """
+        price = Prices.objects.get(id=1)
+        field_label = price._meta.get_field('orig_code').verbose_name
+        self.assertEqual(field_label, 'orig code')
