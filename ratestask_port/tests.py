@@ -20,3 +20,11 @@ class PortsModelTestCase(TestCase):
             name='Test Port',
             parent_slug=self.region
         )
+
+    def test_port_creation(self):
+        """
+        Test whether port create properly
+        """
+        port = self.port
+        self.assertTrue(isinstance(port, Ports))
+        self.assertEqual(port.__str__(), port.code)
