@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 
 from app import settings
 
@@ -24,3 +24,23 @@ class Ports(models.Model):
 
     def __str__(self):
         return f'{self.code}'
+
+    @classmethod
+    def get_ports_by_code_or_parent_slug(cls, code, slug):
+        """
+        This class method return ports by making query based on their code or parent slug
+        :param code: Port code
+        :param slug: Parent slug
+        :return: Database records
+        """
+
+        query = """
+            SELECT * FROM ports 
+            WHERE code = {} OR parent_slug = {}
+        """.format(code, slug)
+
+        with connection.cursor() as cursor:
+            cursor.execute(query)
+            row = cursor.fetchall()
+
+        return row
