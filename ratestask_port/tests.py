@@ -44,3 +44,17 @@ class PortsModelTestCase(TestCase):
         """
         port = Ports.objects.get(code="TCODE")
         self.assertEqual(str(port), "TCODE")
+
+    def test_unique_code(self):
+        """
+        Test whether the code field is unique
+        """
+        with self.assertRaises(Exception):
+            Ports.objects.create(
+                code="TCODE",
+                name="Test Port",
+                parent_slug=Regions.objects.create(
+                    slug="test_region",
+                    name="Test Region"
+                )
+            )
