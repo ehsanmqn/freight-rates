@@ -31,6 +31,7 @@ class Prices(models.Model):
         :param date_to: Date to in YYY-MM-DD format
         :return: List of data
         """
+
         with connection.cursor() as cursor:
             cursor.execute("SELECT DATE(dates.day) AS day, COALESCE(AVG(prices.price), NULL) AS average_price "
                            "FROM (SELECT generate_series(%s::date, %s::date, '1 day') AS day) AS dates "
@@ -69,14 +70,16 @@ class Prices(models.Model):
                   dest_codes AS (
                     SELECT code FROM ports WHERE code IN ('{}') OR parent_slug IN ('{}')
                   )
-                SELECT DATE(dates.day) AS day, COALESCE(AVG(prices.price), NULL) AS average_price
+                SELECT DATE(dates.day) AS day, 
+                CASE 
+                    WHEN COUNT(prices.price) >= 3 THEN COALESCE(AVG(prices.price), NULL)
+                END AS average_price
                 FROM (SELECT generate_series('{}'::date, '{}'::date, '1 day') AS day) AS dates
                 LEFT JOIN prices ON prices.orig_code IN (SELECT code FROM origin_codes)
                 AND prices.dest_code IN (SELECT code FROM dest_codes)
                 AND DATE(prices.day) = dates.day
                 WHERE dates.day BETWEEN '{}'::date AND '{}'::date
-                GROUP BY dates.day
-                HAVING COUNT(prices.price) >= 3 OR COUNT(prices.price) = 0;
+                GROUP BY dates.day;
             """.format(origins, origins, destins, destins, date_from, date_to, date_from, date_to)
 
         with connection.cursor() as cursor:
