@@ -1,4 +1,4 @@
-from django.db import models
+from django.db import models, connection
 
 from ratestask_port.models import Ports
 
@@ -20,3 +20,24 @@ class Prices(models.Model):
 
     def __str__(self):
         return f'{self.price}'
+
+    @classmethod
+    def get_avg_daily_prices(cls, origins, destins, date_from, date_to):
+        """
+        This class methode queries for average daily prices by giving dates, origins, and destinations.
+        :param origins: Origin ports code
+        :param destins: Destination ports code
+        :param date_from: Date from in YYY-MM-DD format
+        :param date_to: Date to in YYY-MM-DD format
+        :return: Database query
+        """
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT day, CASE WHEN COUNT(*) < 3 THEN NULL ELSE AVG(price) END AS average_price "
+                           "FROM prices "
+                           "WHERE orig_code IN %s "
+                           "AND dest_code IN %s "
+                           "AND day BETWEEN %s AND %s "
+                           "GROUP BY day", [origins, destins, date_from, date_to])
+            rows = cursor.fetchall()
+
+        return rows
