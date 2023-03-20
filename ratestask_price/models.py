@@ -32,12 +32,16 @@ class Prices(models.Model):
         :return: Database query
         """
         with connection.cursor() as cursor:
-            cursor.execute("SELECT day, CASE WHEN COUNT(*) < 3 THEN NULL ELSE AVG(price) END AS average_price "
-                           "FROM prices "
-                           "WHERE orig_code IN %s "
-                           "AND dest_code IN %s "
-                           "AND day BETWEEN %s AND %s "
-                           "GROUP BY day", [origins, destins, date_from, date_to])
+            cursor.execute("SELECT DATE(dates.day) AS day, COALESCE(AVG(prices.price), NULL) AS average_price "
+                           "FROM (SELECT generate_series(%s::date, %s::date, '1 day') AS day) AS dates "
+                           "LEFT JOIN prices ON prices.orig_code IN %s "
+                           "AND prices.dest_code IN %s "
+                           "AND DATE(prices.day) = dates.day "
+                           "WHERE dates.day BETWEEN %s::date AND %s::date "
+                           "GROUP BY dates.day "
+                           "HAVING COUNT(prices.price) >= 3 OR COUNT(prices.price) = 0 ", [date_from, date_to,
+                                                                                           origins, destins,
+                                                                                           date_from, date_to])
             rows = cursor.fetchall()
 
         columns = [col[0] for col in cursor.description]
