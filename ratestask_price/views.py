@@ -29,9 +29,16 @@ class ListDailyAveragePrice(APIView):
         origins = tuple([item[0] for item in origin])
         destins = tuple([item[0] for item in destination])
 
-        # Query for getting average prices per day
-        queryset = Prices.get_avg_daily_prices(origins=origins, destins=destins,
-                                               date_from=date_from, date_to=date_to)
+        try:
+            # Query for getting average prices per day
+            queryset = Prices.get_avg_daily_prices(origins=origins, destins=destins,
+                                                   date_from=date_from, date_to=date_to)
+        except Exception as e:
+            return Response({
+                "code": status.HTTP_417_EXPECTATION_FAILED,
+                "message": "Operation failed: " + str(e),
+                "result": []
+            }, status=status.HTTP_417_EXPECTATION_FAILED)
 
         # Serialize output data
         serialized_data = ListDailyAveragePriceOutputSerializer(queryset, many=True,
