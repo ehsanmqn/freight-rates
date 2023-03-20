@@ -72,3 +72,27 @@ class PortsModelTestCase(TestCase):
                     name="Test Region"
                 )
             )
+
+    def test_name_max_length(self):
+        """
+        Test that the name field has the correct max length
+        """
+        with self.assertRaises(Exception):
+            Ports.objects.create(
+                code="TCODE" * 20,
+                name="Test Port",
+                parent_slug=Regions.objects.create(
+                    slug="test_region",
+                    name="Test Region"
+                )
+            )
+
+    def test_parent_slug_null(self):
+        """
+        Test that the parent_slug field can be null
+        """
+        port = Ports.objects.create(
+            code="TCOD2",
+            name="Test Port2"
+        )
+        self.assertIsNone(port.parent_slug)
