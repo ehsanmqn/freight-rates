@@ -36,7 +36,7 @@ class Ports(models.Model):
 
         query = """
             SELECT * FROM ports 
-            WHERE code = {} OR parent_slug = {}
+            WHERE code = '{}' OR parent_slug = '{}'
         """.format(code, slug)
 
         with connection.cursor() as cursor:
