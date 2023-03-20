@@ -3,9 +3,9 @@ from rest_framework import serializers
 from ratestask_port.models import Ports
 
 
-class ListDailyAveragePriceInputSerializer(serializers.Serializer):
+class ListDailyAveragePriceInputSerializerV1(serializers.Serializer):
     """
-    Input serializer class for the ListDailyAveragePrice view class
+    Input serializer class for the ListDailyAveragePriceV1 view class with validation on origin and destination
     """
     date_from = serializers.DateField(required=True, allow_null=False)
     date_to = serializers.DateField(required=True, allow_null=False)
@@ -25,6 +25,16 @@ class ListDailyAveragePriceInputSerializer(serializers.Serializer):
         if len(destination) == 0:
             raise serializers.ValidationError("Invalid destination port symbol.")
         return destination
+
+
+class ListDailyAveragePriceInputSerializerV2(serializers.Serializer):
+    """
+    Input serializer class for the ListDailyAveragePriceV2 view class
+    """
+    date_from = serializers.DateField(required=True, allow_null=False)
+    date_to = serializers.DateField(required=True, allow_null=False)
+    origin = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+    destination = serializers.CharField(required=True, allow_blank=False, allow_null=False)
 
 
 class ListDailyAveragePriceOutputSerializer(serializers.Serializer):
