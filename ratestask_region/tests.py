@@ -17,3 +17,10 @@ class RegionsTestCase(TestCase):
             slug="europe",
             name="Europe"
         )
+
+    def test_str_method(self):
+        """
+        Test that the __str__ method returns the slug of the region correctly
+        """
+        region = Regions.objects.get(slug="europe")
+        self.assertEqual(str(region), "europe")
