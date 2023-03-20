@@ -11,6 +11,12 @@ from ratestask_price.serializers import ListDailyAveragePriceInputSerializerV1, 
 class ListDailyAveragePriceV1(APIView):
     """
     List daily average price between two defined date for given ports or regions
+
+    Query parameters
+    date_from: Starting date in YYYY-MM-DD format
+    date_to: End date in YYYY-MM-DD format
+    origin: Origin port code or region slug
+    destination: Destination port code or region slug
     """
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ListDailyAveragePriceInputSerializerV1
@@ -56,6 +62,12 @@ class ListDailyAveragePriceV2(APIView):
     """
     List daily average price between two defined date for given ports or regions
     This is the second version of the same API, but it uses a different query structure
+
+    Query parameters
+    date_from: Starting date in YYYY-MM-DD format
+    date_to: End date in YYYY-MM-DD format
+    origin: Origin port code or region slug
+    destination: Destination port code or region slug
     """
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ListDailyAveragePriceInputSerializerV2
