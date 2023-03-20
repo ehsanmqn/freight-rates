@@ -28,3 +28,12 @@ class PortsModelTestCase(TestCase):
         port = self.port
         self.assertTrue(isinstance(port, Ports))
         self.assertEqual(port.__str__(), port.code)
+
+    def test_port_fields(self):
+        """
+        Test that object created according to what specified in the task description
+        """
+        port = Ports.objects.get(code='TCODE')
+        self.assertEqual(port.code, 'TCODE')
+        self.assertEqual(port.name, 'Test Port')
+        self.assertEqual(port.parent_slug, self.region)
