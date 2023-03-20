@@ -8,7 +8,7 @@ from ratestask_price.serializers import ListDailyAveragePriceInputSerializerV1, 
     ListDailyAveragePriceInputSerializerV2
 
 
-class ListDailyAveragePrice(APIView):
+class ListDailyAveragePriceV1(APIView):
     """
     List daily average price between two defined date for given ports or regions
     """
