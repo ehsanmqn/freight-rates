@@ -44,6 +44,10 @@ INSTALLED_APPS = [
 
     'corsheaders',
     'rest_framework',
+
+    'ratestask_port',
+    'ratestask_region',
+    'ratestask_price'
 ]
 
 MIDDLEWARE = [
