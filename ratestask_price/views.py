@@ -3,7 +3,8 @@ from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from ratestask_price.serializers import ListDailyAveragePriceInputSerializer
+from ratestask_price.models import Prices
+from ratestask_price.serializers import ListDailyAveragePriceInputSerializer, ListDailyAveragePriceOutputSerializer
 
 
 class ListDailyAveragePrice(APIView):
@@ -26,8 +27,17 @@ class ListDailyAveragePrice(APIView):
 
         print(">>>> ", date_from, date_to, origin, destination)
 
+        origins = tuple([item[0] for item in origin])
+        destins = tuple([item[0] for item in destination])
+
+        queryset = Prices.get_avg_daily_prices(origins=origins, destins=destins,
+                                               date_from=date_from, date_to=date_to)
+
+        serialized_data = ListDailyAveragePriceOutputSerializer(queryset, many=True,
+                                                                context={"request": request}).data
+
         return Response({
             "code": status.HTTP_200_OK,
             "message": "Operation successful",
-            "result": []
+            "result": serialized_data
         }, status=status.HTTP_200_OK)
