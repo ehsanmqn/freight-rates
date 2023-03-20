@@ -44,3 +44,13 @@ class RegionsTestCase(TestCase):
                 slug="europe",
                 name="Europen" * 20,
             )
+
+    def test_parent_slug_null(self):
+        """
+        Test that the parent_slug field can be null
+        """
+        region = Regions.objects.create(
+            slug="north_america",
+            name="North America"
+        )
+        self.assertIsNone(region.parent_slug)
