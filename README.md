@@ -258,6 +258,6 @@ the normalization process will depend on the requirements of the application and
 between the data entities.
 
 ## End
-Feel free to visit my Github profile where I have shared a few projects to check out.
+Feel free to visit my [Github profile](https://github.com/ehsanmqn) where I have shared a few projects to check out.
 
 Happy coding :tada: :tada: :tada: 
