@@ -1,3 +1,5 @@
+from datetime import timedelta, datetime
+
 from rest_framework import serializers
 
 from ratestask_port.models import Ports
@@ -11,6 +13,16 @@ class ListDailyAveragePriceInputSerializerV1(serializers.Serializer):
     date_to = serializers.DateField(required=True, allow_null=False)
     origin = serializers.CharField(required=True, allow_blank=False, allow_null=False)
     destination = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+
+    def validate_date_to(self, value):
+        if value >= datetime.now().date() + timedelta(days=365*5):
+            raise serializers.ValidationError("Too big date to parameter.")
+        return value
+
+    def validate_date_from(self, value):
+        if value <= datetime.now().date() - timedelta(days=365*5):
+            raise serializers.ValidationError("Too small date from parameter.")
+        return value
 
     def validate_origin(self, value):
         origin = Ports.get_ports_by_code_or_slug(value=value)
@@ -35,6 +47,16 @@ class ListDailyAveragePriceInputSerializerV2(serializers.Serializer):
     date_to = serializers.DateField(required=True, allow_null=False)
     origin = serializers.CharField(required=True, allow_blank=False, allow_null=False)
     destination = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+
+    def validate_date_to(self, value):
+        if value >= datetime.now().date() + timedelta(days=365*5):
+            raise serializers.ValidationError("Too big date to parameter.")
+        return value
+
+    def validate_date_from(self, value):
+        if value <= datetime.now().date() - timedelta(days=365*5):
+            raise serializers.ValidationError("Too small date from parameter.")
+        return value
 
 
 class ListDailyAveragePriceOutputSerializer(serializers.Serializer):
