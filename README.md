@@ -77,18 +77,37 @@ use follwoing address to access the second endpoint API:
 http://127.0.0.1:8000/api/v2/rates/?date_from=2016-01-01&date_to=2016-01-10&origin=CNSGH&destination=north_europe_main
 ```
 
-The initial endpoint incorporates two distinct SQL queries within its neighboring serializer (ListDailyAveragePriceInputSerializerV1) to authenticate the Origin and Destination codes. This enables us to deliver the appropriate response to the user if the codes or slugs are not present in the database. Here's an example response for this scenario:
+The initial endpoint incorporates two distinct SQL queries within its neighboring serializer (ListDailyAveragePriceInputSerializerV1) to authenticate the Origin and Destination codes. This enables us to deliver the appropriate response to the user if the codes or slugs are not present in the database. 
+
+Here's an example request and 2 responses for this scenario:
 
 ```html
-http://127.0.0.1:8000/api/v1/rates/?date_from=2016-01-10&date_to=2016-01-11&origin=asd&destination=sdfg
+http://127.0.0.1:8000/api/v2/rates/?date_from=2017-01-10&date_to=2017-01-11&origin=CNSGH&destination=sdkfj
 ```
+
+List Daily Average Price V1 response:
 ```json
 {
-    "origin": [
-        "Invalid origin port symbol."
-    ],
     "destination": [
         "Invalid destination port symbol."
+    ]
+}
+```
+
+List Daily Average Price V2 response:
+```json
+{
+    "code": 200,
+    "message": "Operation successful",
+    "result": [
+        {
+            "day": "2017-01-10",
+            "average_price": null
+        },
+        {
+            "day": "2017-01-11",
+            "average_price": null
+        }
     ]
 }
 ```
