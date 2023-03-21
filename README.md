@@ -18,6 +18,7 @@ docker-compose up --build
 If you prefer to manually run the project, start PostgreSQL as instructed in the task. Next, modify the database host in settings.py to localhost. Finally, execute the following commands in the project root directory:
 ```bash 
 pip install -r requirements.txt
+python manage.py collectstatic
 python manage.py runserver 0.0.0.0:8000
 ```
 
