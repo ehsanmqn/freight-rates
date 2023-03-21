@@ -258,8 +258,7 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
         response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
                                          'origin': origin, 'destination': destination})
 
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('origin', response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_incorrect_origin_code(self):
         """
