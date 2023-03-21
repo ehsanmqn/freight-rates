@@ -211,7 +211,7 @@ class ListDailyAveragePriceV1TestCase(TestCase):
 
     def test_forward_backward_dates(self):
         """
-        Test same dates should not return any result
+        Test earlier end date
         """
         url = reverse('list-daily-average-price-v1')
         date_from = datetime.now().date()
@@ -227,3 +227,20 @@ class ListDailyAveragePriceV1TestCase(TestCase):
         self.assertIn('code', response.data)
         self.assertIn('message', response.data)
         self.assertEqual(len(response.data['result']), 0)
+
+    def test_bad_formatted_date(self):
+        """
+        Test bad formatted dates
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = '2011-18-10'
+        date_to = '2011-18-10'
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('date_from', response.data)
+        self.assertIn('date_to', response.data)
