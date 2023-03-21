@@ -77,7 +77,7 @@ use follwoing address to access the second endpoint API:
 http://127.0.0.1:8000/api/v2/rates/?date_from=2016-01-01&date_to=2016-01-10&origin=CNSGH&destination=north_europe_main
 ```
 
-The initial endpoint incorporates two distinct SQL queries within its neighboring serializer (ListDailyAveragePriceInputSerializerV1) to authenticate the Origin and Destination codes. This enables us to deliver the appropriate response to the user if the codes or slugs are not present in the database. 
+Deference between these two APIs is that the initial endpoint incorporates two distinct SQL queries within its neighboring serializer (ListDailyAveragePriceInputSerializerV1) to authenticate the Origin and Destination codes. This enables us to deliver the appropriate response to the user if the codes or slugs are not present in the database. 
 
 Here's an example request and 2 responses for this scenario:
 
