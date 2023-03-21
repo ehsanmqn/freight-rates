@@ -68,15 +68,15 @@ class Prices(models.Model):
             WITH  origin_codes AS (
                 SELECT code FROM ports
                 RIGHT JOIN regions ON regions.slug = ports.parent_slug
-                WHERE regions.parent_slug = '{0}' 
-                    OR ports.parent_slug = '{0}' 
-                    OR ports.code = '{0}'
+                WHERE regions.parent_slug = lower('{0}') 
+                    OR ports.parent_slug = lower('{0}') 
+                    OR ports.code = upper('{0}')
             ), dest_codes AS (
                 SELECT code FROM ports
                 RIGHT JOIN regions ON regions.slug = ports.parent_slug
-                WHERE regions.parent_slug = '{1}' 
-                    OR ports.parent_slug = '{1}' 
-                    OR ports.code = '{1}'
+                WHERE regions.parent_slug = lower('{1}') 
+                    OR ports.parent_slug = lower('{1}') 
+                    OR ports.code = upper('{1}')
               )
             SELECT DATE(dates.day) AS day, 
             CASE 
