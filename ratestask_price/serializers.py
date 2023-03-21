@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from ratestask_price.validators import validate_origin_destination
+from ratestask_port.models import Ports
 
 
 class ListDailyAveragePriceInputSerializerV1(serializers.Serializer):
@@ -9,10 +9,32 @@ class ListDailyAveragePriceInputSerializerV1(serializers.Serializer):
     """
     date_from = serializers.DateField(required=True, allow_null=False)
     date_to = serializers.DateField(required=True, allow_null=False)
-    origin = serializers.CharField(required=True, allow_blank=False, allow_null=False,
-                                   validators=[validate_origin_destination])
-    destination = serializers.CharField(required=True, allow_blank=False, allow_null=False,
-                                        validators=[validate_origin_destination])
+    origin = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+    destination = serializers.CharField(required=True, allow_blank=False, allow_null=False)
+
+    def validate_origin(self, value):
+        """
+        Validation function for the origin field
+        """
+
+        # Check whether origin exists in database
+        origin = Ports.get_ports_by_code_or_slug(value=value)
+
+        if len(origin) == 0:
+            raise serializers.ValidationError("Invalid origin port symbol.")
+        return origin
+
+    def validate_destination(self, value):
+        """
+        Validation function for the destination field
+        """
+
+        # Check whether destination exists in database
+        destination = Ports.get_ports_by_code_or_slug(value=value)
+
+        if len(destination) == 0:
+            raise serializers.ValidationError("Invalid destination port symbol.")
+        return destination
 
 
 class ListDailyAveragePriceInputSerializerV2(serializers.Serializer):
