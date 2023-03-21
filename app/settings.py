@@ -91,7 +91,7 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'ratestask',
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DB_HOST'),
         'PORT': '5432',
     }
 }
