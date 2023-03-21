@@ -1,6 +1,9 @@
 from datetime import date
 
+from django.urls import reverse
 from django.test import TestCase
+from rest_framework.test import APITestCase
+from rest_framework import status
 
 from ratestask_port.models import Ports
 from ratestask_price.models import Prices
@@ -53,3 +56,26 @@ class PricesModelTest(TestCase):
         price = Prices.objects.get(id=1)
         field_label = price._meta.get_field('price').verbose_name
         self.assertEqual(field_label, 'price')
+
+
+
+class ListDailyAveragePriceV1TestCase(APITestCase):
+    """
+    Test class for the ListDailyAveragePriceV1 view
+    """
+    def setUp(self):
+        pass
+
+    def test_query_params_validation(self):
+        """
+        Test the serializer validation
+        """
+        url = reverse('list-daily-average-price-v1')
+
+        response = self.client.get(url)
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('date_from', response.data)
+        self.assertIn('date_to', response.data)
+        self.assertIn('origin', response.data)
+        self.assertIn('destination', response.data)
