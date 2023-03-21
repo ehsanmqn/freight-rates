@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework.response import Response
@@ -31,6 +33,13 @@ class ListDailyAveragePriceV1(APIView):
         date_to = data.get('date_to')
         origin = data.get('origin')
         destination = data.get('destination')
+
+        if abs(date_to - date_from) > datetime.timedelta(365):
+            return Response({
+                "code": status.HTTP_400_BAD_REQUEST,
+                "message": "Too broad dates range (MAX: 365)",
+                "result": []
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         # Bundle port codes as a tuple to feed them to the query
         origins = tuple([item[0] for item in origin])
@@ -82,6 +91,13 @@ class ListDailyAveragePriceV2(APIView):
         date_to = data.get('date_to')
         origin = data.get('origin')
         destination = data.get('destination')
+
+        if abs(date_to - date_from) > datetime.timedelta(365):
+            return Response({
+                "code": status.HTTP_400_BAD_REQUEST,
+                "message": "Too broad dates range (MAX: 365)",
+                "result": []
+            }, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             # Query for getting average prices per day
