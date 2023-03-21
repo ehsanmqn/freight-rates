@@ -244,3 +244,66 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('date_from', response.data)
         self.assertIn('date_to', response.data)
+
+    def test_lowercase_origin_code(self):
+        """
+        Test lower cased origin code
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = '2016-01-01'
+        date_to = '2016-01-10'
+        origin = 'CNSGH'.lower()
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('origin', response.data)
+
+    def test_incorrect_origin_code(self):
+        """
+        Test incorrect origin code
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = '2016-01-01'
+        date_to = '2016-01-10'
+        origin = 'CNSGF'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('origin', response.data)
+
+    def test_unending_date_to(self):
+        """
+        Test infinite date to
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = '2016-01-01'
+        date_to = '99999999-01-10'
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('date_to', response.data)
+
+    def test_formatted_unending_date_to(self):
+        """
+        Test infinite date to
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = '2016-01-01'
+        date_to = '9999-01-10'
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
