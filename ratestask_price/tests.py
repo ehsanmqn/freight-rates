@@ -189,3 +189,41 @@ class ListDailyAveragePriceV1TestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('origin', response.data)
+
+    def test_same_dates(self):
+        """
+        Test same dates should be return a day result
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = datetime.now().date()
+        date_to = datetime.now().date()
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('result', response.data)
+        self.assertIn('code', response.data)
+        self.assertIn('message', response.data)
+        self.assertEqual(len(response.data['result']), 1)
+
+    def test_forward_backward_dates(self):
+        """
+        Test same dates should not return any result
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = datetime.now().date()
+        date_to = datetime.now().date() - timedelta(days=32)
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('result', response.data)
+        self.assertIn('code', response.data)
+        self.assertIn('message', response.data)
+        self.assertEqual(len(response.data['result']), 0)
