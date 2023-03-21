@@ -82,7 +82,7 @@ The difference between these two APIs is that the initial endpoint incorporates 
 Here's an example request parameters and 2 responses for this scenario:
 
 ```html
-?date_from=2017-01-10&date_to=2017-01-11&origin=CNSGH&destination=sdkfj
+?date_from=2017-01-10&date_to=2017-01-11&origin=CNSGH&destination=lmnop
 ```
 
 List Daily Average Price V1 response:
