@@ -173,3 +173,19 @@ class ListDailyAveragePriceV1TestCase(TestCase):
 
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('origin', response.data)
+
+    def test_origin_null_word(self):
+        """
+        Test null word as origin
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = datetime.now().date() - timedelta(days=32)
+        date_to = datetime.now().date()
+        origin = 'null'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('origin', response.data)
