@@ -255,3 +255,8 @@ reference the "ports" table.
 Note that this is just one example of how the tables could be normalized, and the specific details of 
 the normalization process will depend on the requirements of the application and the relationships 
 between the data entities.
+
+## End
+Feel free to visit my Github profile where I have shared a few projects to check out.
+
+Happy coding :tada :tada :tada 
