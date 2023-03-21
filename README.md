@@ -220,10 +220,11 @@ GROUP BY d.day;
 ```
 
 ## Improvement to the schema
-Currently, the "ports" table contains a "parent_slug" column that references the "regions" table. 
-However, the "regions" table also contains a "parent_slug" column that references itself. This creates 
+Currently, the `ports` table contains a `parent_slug` column that references the `regions` table. 
+However, the `regions` table also contains a `parent_slug` column that references itself. This creates 
 a circular reference that can be difficult to manage. To improve the structure of the database, consider 
 normalizing the data so that each table only references other tables in a one-to-many relationship.
+
 Following is a normalized version for the regions:
 
 ```sql
@@ -232,7 +233,7 @@ region_name
 parent_region_id (foreign key references region_id)
 ```
 
-Create a table for ports with the following columns:
+A normalized table for ports with the following columns:
 ```sql
 port_id (primary key)
 port_code
@@ -240,7 +241,7 @@ port_name
 region_id (foreign key references region_id)
 ```
 
-Create a table for prices with the following columns:
+A normalized table for prices with the following columns:
 ```sql
 price_id (primary key)
 orig_port_id (foreign key references port_id)
