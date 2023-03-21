@@ -187,7 +187,7 @@ WHERE dates.day BETWEEN '{2}'::date AND '{3}'::date
 GROUP BY dates.day
 ```
 
-Currently, I'm using the above SQL query inside the Price model. However, I made some optimizations to improve the query's readability and functionality. The optimized version of above query is as follows (I haven't used the following query in my code due I did edge tests based on the above query.)
+Currently, I'm using the above SQL query inside the Price model. However, I made some optimizations to improve the query's readability and functionality. The optimized version of above query is as follows (I haven't pushed the project with the following query in my code due I did edge tests based on the above query.)
 
 ```sql
 WITH origin_codes AS (
