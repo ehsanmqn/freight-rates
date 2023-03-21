@@ -91,8 +91,8 @@ DATABASES = {
         'NAME': 'postgres',
         'USER': 'postgres',
         'PASSWORD': 'ratestask',
-        # 'HOST': os.environ.get('DB_HOST'),
-        'HOST': 'localhost',
+        'HOST': os.environ.get('DB_HOST'),
+        # 'HOST': 'localhost',
         'PORT': '5432',
         'TEST': {
             'MIRROR': 'default'

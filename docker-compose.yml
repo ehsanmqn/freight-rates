@@ -5,7 +5,7 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    command: bash -c "python manage.py collectstatic && python manage.py runserver 0.0.0.0:8000"
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py runserver 0.0.0.0:8000"
     container_name: rates-task
     hostname: rates-task
     volumes:
