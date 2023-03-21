@@ -32,6 +32,7 @@ class Prices(models.Model):
         :return: List of data
         """
 
+        # Perform the SQL query
         with connection.cursor() as cursor:
             cursor.execute("SELECT DATE(dates.day) AS day, "
                            "CASE "
@@ -47,6 +48,7 @@ class Prices(models.Model):
                                                    date_from, date_to])
             rows = cursor.fetchall()
 
+        # Organize output data
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in rows]
 
@@ -98,7 +100,7 @@ class Prices(models.Model):
             cursor.execute(query)
             rows = cursor.fetchall()
 
-        # Serialize data
+        # Organize output data
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in rows]
 
