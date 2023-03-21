@@ -1,0 +1,37 @@
+version: '3'
+
+services:
+  rates-task:
+    build:
+      dockerfile: Dockerfile
+      context: .
+    command: bash -c "python manage.py runserver 0.0.0.0:8000"
+    container_name: rates-task
+    hostname: rates-task
+    volumes:
+      - ./:/rates-task
+    ports:
+      - "8000:8000"
+    stdin_open: true
+    tty: true
+    networks:
+      - shared_network
+    environment:
+      - DB_HOST=postgres
+    depends_on:
+      - postgres
+
+  postgres:
+    build:
+      dockerfile: Dockerfile
+      context: ./ratestask/
+    container_name: rates-db
+    hostname: rates-db
+    ports:
+      - "5432:5432"
+    networks:
+      - shared_network
+
+networks:
+  shared_network:
+    driver: bridge
