@@ -58,7 +58,7 @@ class PricesModelTest(TestCase):
         self.assertEqual(field_label, 'price')
 
 
-class ListDailyAveragePriceV1TestCase(TestCase):
+class ListDailyAveragePriceV1TestCase(APITestCase):
     """
     Test class for the ListDailyAveragePriceV1 view
     """
