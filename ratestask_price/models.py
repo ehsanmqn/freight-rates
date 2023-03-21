@@ -64,6 +64,7 @@ class Prices(models.Model):
         :return: List of data
         """
 
+        # Construct the query
         query = """
             WITH  origin_codes AS (
                 SELECT code FROM ports
@@ -92,10 +93,12 @@ class Prices(models.Model):
             GROUP BY dates.day;
         """.format(origins, destins, date_from, date_to)
 
+        # Perform the query
         with connection.cursor() as cursor:
             cursor.execute(query)
             rows = cursor.fetchall()
 
+        # Serialize data
         columns = [col[0] for col in cursor.description]
         data = [dict(zip(columns, row)) for row in rows]
 
