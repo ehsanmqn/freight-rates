@@ -32,8 +32,6 @@ class Prices(models.Model):
         :return: List of data
         """
 
-        print(">>> ", destins)
-
         with connection.cursor() as cursor:
             cursor.execute("SELECT DATE(dates.day) AS day, "
                            "CASE "
