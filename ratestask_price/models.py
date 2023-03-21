@@ -84,10 +84,12 @@ class Prices(models.Model):
             CASE 
                 WHEN COUNT(prices.price) >= 3 THEN COALESCE(ROUND(AVG(prices.price)), NULL)
             END AS average_price
-            FROM (SELECT generate_series('{2}'::date, '{3}'::date, '1 day') AS day) AS dates
+            FROM (
+                SELECT generate_series('{2}'::date, '{3}'::date, '1 day') AS day
+            ) AS dates
             LEFT JOIN prices ON prices.orig_code IN (SELECT code FROM origin_codes)
-            AND prices.dest_code IN (SELECT code FROM dest_codes)
-            AND DATE(prices.day) = dates.day
+                            AND prices.dest_code IN (SELECT code FROM dest_codes)
+                            AND DATE(prices.day) = dates.day
             WHERE dates.day BETWEEN '{2}'::date AND '{3}'::date
             GROUP BY dates.day;
         """.format(origins, destins, date_from, date_to)
