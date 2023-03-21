@@ -34,11 +34,19 @@ class ListDailyAveragePriceV1(APIView):
         origin = data.get('origin')
         destination = data.get('destination')
 
+        # Check whether dates well-sequenced
+        if date_to < date_from:
+            return Response({
+                "code": status.HTTP_400_BAD_REQUEST,
+                "message": "The sequencing of dates is incorrect.",
+                "result": []
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
             return Response({
                 "code": status.HTTP_400_BAD_REQUEST,
-                "message": "Too broad dates range (MAX: 2 years)",
+                "message": "Too broad dates range (MAX: 2 years).",
                 "result": []
             }, status=status.HTTP_400_BAD_REQUEST)
 
@@ -93,6 +101,14 @@ class ListDailyAveragePriceV2(APIView):
         origin = data.get('origin')
         destination = data.get('destination')
 
+        # Check whether dates well-sequenced
+        if date_to < date_from:
+            return Response({
+                "code": status.HTTP_400_BAD_REQUEST,
+                "message": "The sequencing of dates is incorrect.",
+                "result": []
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
             return Response({
@@ -108,7 +124,7 @@ class ListDailyAveragePriceV2(APIView):
         except Exception as e:
             return Response({
                 "code": status.HTTP_417_EXPECTATION_FAILED,
-                "message": "Operation failed: " + str(e),
+                "message": "Operation failed",
                 "result": []
             }, status=status.HTTP_417_EXPECTATION_FAILED)
 
