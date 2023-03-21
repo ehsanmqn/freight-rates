@@ -34,6 +34,7 @@ class ListDailyAveragePriceV1(APIView):
         origin = data.get('origin')
         destination = data.get('destination')
 
+        # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
             return Response({
                 "code": status.HTTP_400_BAD_REQUEST,
@@ -92,6 +93,7 @@ class ListDailyAveragePriceV2(APIView):
         origin = data.get('origin')
         destination = data.get('destination')
 
+        # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
             return Response({
                 "code": status.HTTP_400_BAD_REQUEST,
