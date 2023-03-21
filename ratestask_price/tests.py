@@ -299,7 +299,7 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
         """
         url = reverse('list-daily-average-price-v1')
         date_from = '2016-01-01'
-        date_to = '9999-01-10'
+        date_to = '9999-11-11'
         origin = 'CNSGH'
         destination = 'north_europe_main'
 
