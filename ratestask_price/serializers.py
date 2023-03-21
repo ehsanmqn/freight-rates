@@ -1,6 +1,5 @@
 from rest_framework import serializers
 
-from ratestask_port.models import Ports
 from ratestask_price.validators import validate_origin_destination
 
 
