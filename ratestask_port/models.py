@@ -34,6 +34,7 @@ class Ports(models.Model):
         :return: Database records
         """
 
+        # Prepare the query
         query = """
             SELECT ports.code FROM ports
             RIGHT JOIN regions
@@ -43,6 +44,7 @@ class Ports(models.Model):
                 OR ports.code = upper('{0}')
         """.format(value)
 
+        # Perform the query
         with connection.cursor() as cursor:
             cursor.execute(query)
             row = cursor.fetchall()
