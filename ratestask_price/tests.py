@@ -91,7 +91,6 @@ class ListDailyAveragePriceV1TestCase(TestCase):
     def test_list_daily_average_price(self):
         """
         Test the get_full_avg_daily_prices function
-        :return:
         """
         url = reverse('list-daily-average-price-v1')
         date_from = datetime.now().date() - timedelta(days=2)
@@ -110,3 +109,19 @@ class ListDailyAveragePriceV1TestCase(TestCase):
         self.assertEqual(response.data['result'][1]['average_price'], None)
         self.assertEqual(response.data['result'][2]['day'], str(date_from + timedelta(days=2)))
         self.assertEqual(response.data['result'][2]['average_price'], None)
+
+    def test_list_contains_full_date(self):
+        """
+        Test the result contains full dates based on start and stop dates
+        """
+        url = reverse('list-daily-average-price-v1')
+        date_from = datetime.now().date() - timedelta(days=32)
+        date_to = datetime.now().date()
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['result']), 33)
