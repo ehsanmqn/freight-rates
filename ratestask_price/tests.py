@@ -29,7 +29,7 @@ class PricesModelTest(TestCase):
         """
         Test verbose name of the orig_code label
         """
-        price = Prices.objects.get(id=1)
+        price = Prices.objects.all()[0]
         field_label = price._meta.get_field('orig_code').verbose_name
         self.assertEqual(field_label, 'orig code')
 
@@ -37,7 +37,7 @@ class PricesModelTest(TestCase):
         """
         Test verbose name of the dest_code label
         """
-        price = Prices.objects.get(id=1)
+        price = Prices.objects.all()[0]
         field_label = price._meta.get_field('dest_code').verbose_name
         self.assertEqual(field_label, 'dest code')
 
@@ -45,7 +45,7 @@ class PricesModelTest(TestCase):
         """
         Test verbose name of the day label
         """
-        price = Prices.objects.get(id=1)
+        price = Prices.objects.all()[0]
         field_label = price._meta.get_field('day').verbose_name
         self.assertEqual(field_label, 'day')
 
@@ -53,18 +53,26 @@ class PricesModelTest(TestCase):
         """
         Test verbose name of the price label
         """
-        price = Prices.objects.get(id=1)
+        price = Prices.objects.all()[0]
         field_label = price._meta.get_field('price').verbose_name
         self.assertEqual(field_label, 'price')
 
 
-class ListDailyAveragePriceV1TestCase(APITestCase):
+class ListDailyAveragePriceV1TestCase(TestCase):
     """
     Test class for the ListDailyAveragePriceV1 view
     """
 
     def setUp(self):
-        pass
+        # create test data
+        self.port1 = Ports.objects.create(code='NYC00', name='New York City')
+        self.port2 = Ports.objects.create(code='LAX00', name='Los Angeles')
+        self.price1 = Prices.objects.create(orig_code=self.port1, dest_code=self.port2,
+                                            day=datetime.now().date() - timedelta(days=2), price=500)
+        self.price2 = Prices.objects.create(orig_code=self.port1, dest_code=self.port2,
+                                            day=datetime.now().date() - timedelta(days=1), price=600)
+        self.price3 = Prices.objects.create(orig_code=self.port1, dest_code=self.port2,
+                                            day=datetime.now().date(), price=700)
 
     def test_query_params_validation(self):
         """
@@ -85,9 +93,9 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
         Test the get_full_avg_daily_prices function
         :return:
         """
-        url = reverse('daily-average-price-v1')
-        date_from = '2016-10-01'
-        date_to = '2016-10-03'
+        url = reverse('list-daily-average-price-v1')
+        date_from = datetime.now().date() - timedelta(days=2)
+        date_to = datetime.now().date()
         origin = 'CNSGH'
         destination = 'north_europe_main'
 
@@ -95,10 +103,10 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
                                          'origin': origin, 'destination': destination})
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data['result']), 10)
+        self.assertEqual(len(response.data['result']), 3)
         self.assertEqual(response.data['result'][0]['day'], str(date_from))
-        self.assertEqual(response.data['result'][0]['average_price'], 1112)
+        self.assertEqual(response.data['result'][0]['average_price'], None)
         self.assertEqual(response.data['result'][1]['day'], str(date_from + timedelta(days=1)))
-        self.assertEqual(response.data['result'][1]['average_price'], 1112)
+        self.assertEqual(response.data['result'][1]['average_price'], None)
         self.assertEqual(response.data['result'][2]['day'], str(date_from + timedelta(days=2)))
         self.assertEqual(response.data['result'][2]['average_price'], None)
