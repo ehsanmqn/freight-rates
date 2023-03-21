@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from django.urls import reverse
 from django.test import TestCase
@@ -58,11 +58,11 @@ class PricesModelTest(TestCase):
         self.assertEqual(field_label, 'price')
 
 
-
 class ListDailyAveragePriceV1TestCase(APITestCase):
     """
     Test class for the ListDailyAveragePriceV1 view
     """
+
     def setUp(self):
         pass
 
@@ -79,3 +79,26 @@ class ListDailyAveragePriceV1TestCase(APITestCase):
         self.assertIn('date_to', response.data)
         self.assertIn('origin', response.data)
         self.assertIn('destination', response.data)
+
+    def test_list_daily_average_price(self):
+        """
+        Test the get_full_avg_daily_prices function
+        :return:
+        """
+        url = reverse('daily-average-price-v1')
+        date_from = '2016-10-01'
+        date_to = '2016-10-03'
+        origin = 'CNSGH'
+        destination = 'north_europe_main'
+
+        response = self.client.get(url, {'date_from': date_from, 'date_to': date_to,
+                                         'origin': origin, 'destination': destination})
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data['result']), 10)
+        self.assertEqual(response.data['result'][0]['day'], str(date_from))
+        self.assertEqual(response.data['result'][0]['average_price'], 1112)
+        self.assertEqual(response.data['result'][1]['day'], str(date_from + timedelta(days=1)))
+        self.assertEqual(response.data['result'][1]['average_price'], 1112)
+        self.assertEqual(response.data['result'][2]['day'], str(date_from + timedelta(days=2)))
+        self.assertEqual(response.data['result'][2]['average_price'], None)
