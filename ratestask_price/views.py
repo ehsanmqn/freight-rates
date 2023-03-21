@@ -6,6 +6,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from ratestask_price.models import Prices
+from ratestask_price.responses import send_http_response
 from ratestask_price.serializers import ListDailyAveragePriceInputSerializerV1, ListDailyAveragePriceOutputSerializer, \
     ListDailyAveragePriceInputSerializerV2
 
@@ -36,19 +37,13 @@ class ListDailyAveragePriceV1(APIView):
 
         # Check whether dates well-sequenced
         if date_to < date_from:
-            return Response({
-                "code": status.HTTP_400_BAD_REQUEST,
-                "message": "The sequencing of dates is incorrect.",
-                "result": []
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return send_http_response(code=status.HTTP_400_BAD_REQUEST,
+                                      message="The sequencing of dates is incorrect.")
 
         # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
-            return Response({
-                "code": status.HTTP_400_BAD_REQUEST,
-                "message": "Too broad dates range (MAX: 2 years).",
-                "result": []
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return send_http_response(code=status.HTTP_400_BAD_REQUEST,
+                                      message="Too broad dates range (MAX: 2 years).")
 
         # Bundle port codes as a tuple to feed them to the query
         origins = tuple([item[0] for item in origin])
@@ -59,11 +54,8 @@ class ListDailyAveragePriceV1(APIView):
             queryset = Prices.get_avg_daily_prices_v1(origins=origins, destins=destins,
                                                       date_from=date_from, date_to=date_to)
         except Exception as e:
-            return Response({
-                "code": status.HTTP_417_EXPECTATION_FAILED,
-                "message": "Operation failed: " + str(e),
-                "result": []
-            }, status=status.HTTP_417_EXPECTATION_FAILED)
+            return send_http_response(code=status.HTTP_417_EXPECTATION_FAILED,
+                                      message="Operation failed.")
 
         # Serialize output data
         serialized_data = ListDailyAveragePriceOutputSerializer(queryset, many=True,
@@ -103,30 +95,21 @@ class ListDailyAveragePriceV2(APIView):
 
         # Check whether dates well-sequenced
         if date_to < date_from:
-            return Response({
-                "code": status.HTTP_400_BAD_REQUEST,
-                "message": "The sequencing of dates is incorrect.",
-                "result": []
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return send_http_response(code=status.HTTP_400_BAD_REQUEST,
+                                      message="The sequencing of dates is incorrect.")
 
         # Limit the time range to 2 years
         if abs(date_to - date_from) > datetime.timedelta(365 * 2):
-            return Response({
-                "code": status.HTTP_400_BAD_REQUEST,
-                "message": "Too broad dates range (MAX: 2 years)",
-                "result": []
-            }, status=status.HTTP_400_BAD_REQUEST)
+            return send_http_response(code=status.HTTP_400_BAD_REQUEST,
+                                      message="Too broad dates range (MAX: 2 years).")
 
         try:
             # Query for getting average prices per day
             queryset = Prices.get_avg_daily_prices_v2(origins=origin, destins=destination,
                                                       date_from=date_from, date_to=date_to)
         except Exception as e:
-            return Response({
-                "code": status.HTTP_417_EXPECTATION_FAILED,
-                "message": "Operation failed",
-                "result": []
-            }, status=status.HTTP_417_EXPECTATION_FAILED)
+            return send_http_response(code=status.HTTP_417_EXPECTATION_FAILED,
+                                      message="Operation failed.")
 
         # Serialize output data
         serialized_data = ListDailyAveragePriceOutputSerializer(queryset, many=True,
