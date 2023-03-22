@@ -133,6 +133,7 @@ python manage.py test
 ```
 ## Spent time
 As requested in the task instructions, I am providing the time I spent on this task. I spent approximately 2 hours working on the core components and some tests for both models. It took an additional hour to add the remaining tests. However, the most challenging aspect of this task was figuring out how to provide the data as per the database structure and considering all edge cases. Therefore, it took me some time (2 or 3 hour) to update my queries, find special cases and test against them, and ensure that the data was provided accurately. 
+Overall, I spent 1 day on this task because it was important for me alot.
 
 ## How I did it
 In this section, I will provide some details about the process I followed to complete the task. Specifically, I will focus on the queries, which I found to be the most challenging aspect of this project.
