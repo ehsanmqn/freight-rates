@@ -27,7 +27,7 @@ python manage.py runserver 0.0.0.0:8000
 ## Projects structure
 Within this project, I implemented three models pertaining to the Price, Port, and Region entities. However, these models do not have any relevance to the current task since the tables they create within Django possess different names than those provided by the task. I included these models solely to provide a unit tests for models. The following sections outline several enhancements to the schema of the database provided by the task.
 
-To implement the two API required for this task, I utilized two distinct APIViews. Within this document, I will furnish detailed explanations for both of these Views. I opted against using GenericViews or ViewSets for this particular task, as APIView is better suited for simple APIs and allows for straightforward flexibility.
+To implement the API required for this task, I utilized two distinct APIViews. Within this document, I will furnish detailed explanations for both of these Views. I opted against using GenericViews or ViewSets for this particular task, as APIView is better suited for simple APIs and allows for straightforward flexibility.
 
 To retrieve data for the two APIs under the Price model, I utilized two primary SQL queries. The subsequent sections offer additional details and data regarding these queries.
 
