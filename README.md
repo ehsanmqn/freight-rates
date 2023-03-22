@@ -89,7 +89,8 @@ Here's an example request parameters and 2 responses for this scenario:
 ?date_from=2017-01-10&date_to=2017-01-11&origin=CNSGH&destination=lmnop
 ```
 
-#### List Daily Average Price V1 response:
+List Daily Average Price V1 response:
+
 ```json
 {
     "destination": [
@@ -98,7 +99,8 @@ Here's an example request parameters and 2 responses for this scenario:
 }
 ```
 
-#### List Daily Average Price V2 response:
+List Daily Average Price V2 response:
+
 ```json
 {
     "code": 200,
