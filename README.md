@@ -34,11 +34,11 @@ To retrieve data for the two APIs under the Price model, I utilized two primary 
 ## Usage
 To access the APIs provided by this project, navigate to http://127.0.0.1:8000/ within your preferred browser. As Django is configured to operate in DEBUG mode, you will encounter a yellow "Page not found" page that specifies various routes offered by the project.
 
-Within this project, I opted to furnish two distinct endpoints for the same task. However, it is important to note that there is a critical aspect within the task specifications that must be taken into account:
+It is important to note that there is a critical aspect within the task specifications that must be taken into account:
 
 The task mandates that the API must return a list with the average prices `for each day` on a route between port codes origin and destination. Moreover, the API should return a null value for `days` in which fewer than three prices exist (Including zero - which means no data exist in prices table). Based on these specifications, I determined that even if no prices or paths exist between two specified ports or regions, the API should still provide null data. This approach is correct from the perspective of the user, as when a user selects two locations and specifies a time frame, the backend must still provide null data for the designated time to the frontend to ensure proper plotting.
 
-Following I provide explanations regarding these endpoints.
+Within this project, I opted to furnish two distinct endpoints for the same task. Following I provide explanations regarding these endpoints.
 
 ### List Daily Average Price V1
 The specified endpoint displays the average daily prices for a particular range of dates and designated ports or regions. A Swagger-like documentation page is available for each endpoint, including this one, which can be accessed via the following address:
