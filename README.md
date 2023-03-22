@@ -11,7 +11,7 @@ I developed this Django project as part of the task assigned by Xenata. I chose 
 ## Deployment
 
 ### Docker
-The project includes a docker-compose file that specifies the necessary requirements for deploying the project using a docker. To run the project with docker, navigate to the project root and execute the following command:
+The project includes a docker-compose file that specifies the necessary requirements for deploying the project using docker containers. To run the project with docker, navigate to the project root and execute the following command:
 ```bash
 docker-compose up --build
 ```
