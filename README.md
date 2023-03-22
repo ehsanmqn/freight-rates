@@ -81,13 +81,15 @@ http://127.0.0.1:8000/api/v2/rates/?date_from=2016-01-01&date_to=2016-01-10&orig
 
 The difference between these two APIs is that the initial endpoint incorporates two distinct SQL queries within its neighboring serializer (ListDailyAveragePriceInputSerializerV1) to authenticate the Origin and Destination codes. This enables us to deliver the appropriate response to the user if the codes or slugs are not present in the database. 
 
+Conversely, the List Daily Average Price V2 API does not verify the Origin and Destination codes and slugs in the database. Instead, it returns null for complete days based on the user-provided start and end dates. Here's an example response for a similar scenario from the second endpoint:
+
 Here's an example request parameters and 2 responses for this scenario:
 
 ```html
 ?date_from=2017-01-10&date_to=2017-01-11&origin=CNSGH&destination=lmnop
 ```
 
-List Daily Average Price V1 response:
+#### List Daily Average Price V1 response:
 ```json
 {
     "destination": [
@@ -96,7 +98,7 @@ List Daily Average Price V1 response:
 }
 ```
 
-List Daily Average Price V2 response:
+#### List Daily Average Price V2 response:
 ```json
 {
     "code": 200,
@@ -108,33 +110,6 @@ List Daily Average Price V2 response:
         },
         {
             "day": "2017-01-11",
-            "average_price": null
-        }
-    ]
-}
-```
-
-Conversely, the List Daily Average Price V2 API does not verify the Origin and Destination codes and slugs in the database. Instead, it returns null for complete days based on the user-provided start and end dates. Here's an example response for a similar scenario from the second endpoint:
-
-```json
-{
-    "code": 200,
-    "message": "Operation successful",
-    "result": [
-        {
-            "day": "2016-01-01",
-            "average_price": null
-        },
-        {
-            "day": "2016-01-02",
-            "average_price": null
-        },
-        {
-            "day": "2016-01-03",
-            "average_price": null
-        },
-        {
-            "day": "2016-01-04",
             "average_price": null
         }
     ]
