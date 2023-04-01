@@ -211,6 +211,45 @@ WHERE d.day BETWEEN '{2}'::date AND '{3}'::date
 GROUP BY d.day;
 ```
 
+## Update
+The updated API (API V2) now considers the port/region geohierarchy problem. This means that it is now able to take into account the fact that ports and regions are organized into a hierarchical structure, and that a port or region may be a child of another port or region.
+
+To handle this problem, I have updated the query to include two common table expressions (CTEs) that generate the lists of origin and destination codes based on the input regions:
+
+```sql
+WITH geohierarchy AS (
+    WITH RECURSIVE cte AS (
+        SELECT l.slug FROM regions l WHERE l.slug IN ('{0}', '{1}')
+        UNION
+        SELECT r.slug FROM regions r
+        INNER JOIN cte ON cte.slug = r.parent_slug
+    )
+    SELECT * FROM cte
+),
+daily_average_prices AS (
+    SELECT prices.day, 
+        CASE
+            WHEN COUNT(prices.price) >= 3 THEN COALESCE(ROUND(AVG(prices.price)), NULL)
+        END AS average_price
+    FROM prices
+    JOIN ports orig_port ON prices.orig_code = orig_port.code
+    JOIN ports dest_port ON prices.dest_code = dest_port.code
+    WHERE (prices.orig_code = '{0}' OR orig_port.parent_slug IN (SELECT slug FROM geohierarchy))
+        AND (prices.dest_code = '{1}' OR dest_port.parent_slug IN (SELECT slug FROM geohierarchy))
+    GROUP BY prices.day
+)
+SELECT DATE(dates.day) AS day, dap.average_price
+FROM (
+    SELECT generate_series('{2}'::date, '{3}'::date, '1 day') AS day
+) AS dates
+LEFT JOIN LATERAL (
+    SELECT dap.average_price FROM daily_average_prices dap WHERE dap.day = dates.day
+) dap ON true;
+```
+
+These CTEs use a recursive query to traverse the hierarchical structure of the ports and regions table and generate a list of all ports that are children (directly or indirectly) of the input origin and destination regions.
+This updated query now takes into account the hierarchical structure of the data and generates the correct list of origin and destination codes to filter for.
+
 ## Improvement to the schema
 Currently, the `ports` table contains a `parent_slug` column that references the `regions` table. 
 However, the `regions` table also contains a `parent_slug` column that references itself. This creates 
