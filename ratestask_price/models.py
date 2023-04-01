@@ -68,31 +68,34 @@ class Prices(models.Model):
 
         # Construct the query
         query = """
-            WITH  origin_codes AS (
-                SELECT code FROM ports
-                RIGHT JOIN regions ON regions.slug = ports.parent_slug
-                WHERE regions.parent_slug = lower('{0}') 
-                    OR ports.parent_slug = lower('{0}') 
-                    OR ports.code = upper('{0}')
-            ), dest_codes AS (
-                SELECT code FROM ports
-                RIGHT JOIN regions ON regions.slug = ports.parent_slug
-                WHERE regions.parent_slug = lower('{1}') 
-                    OR ports.parent_slug = lower('{1}') 
-                    OR ports.code = upper('{1}')
-              )
-            SELECT DATE(dates.day) AS day, 
-            CASE 
-                WHEN COUNT(prices.price) >= 3 THEN COALESCE(ROUND(AVG(prices.price)), NULL)
-            END AS average_price
+            WITH geohierarchy AS (
+                WITH RECURSIVE cte AS (
+                    SELECT l.slug FROM regions l WHERE l.slug IN ('{0}', '{1}')
+                    UNION
+                    SELECT r.slug FROM regions r
+                    INNER JOIN cte ON cte.slug = r.parent_slug
+                )
+                SELECT * FROM cte
+            ),
+            daily_average_prices AS (
+                SELECT prices.day, 
+                    CASE
+                        WHEN COUNT(prices.price) >= 3 THEN COALESCE(ROUND(AVG(prices.price)), NULL)
+                    END AS average_price
+                FROM prices
+                JOIN ports orig_port ON prices.orig_code = orig_port.code
+                JOIN ports dest_port ON prices.dest_code = dest_port.code
+                WHERE (prices.orig_code = '{0}' OR orig_port.parent_slug IN (SELECT slug FROM geohierarchy))
+                    AND (prices.dest_code = '{1}' OR dest_port.parent_slug IN (SELECT slug FROM geohierarchy))
+                GROUP BY prices.day
+            )
+            SELECT DATE(dates.day) AS day, dap.average_price
             FROM (
                 SELECT generate_series('{2}'::date, '{3}'::date, '1 day') AS day
             ) AS dates
-            LEFT JOIN prices ON prices.orig_code IN (SELECT code FROM origin_codes)
-                            AND prices.dest_code IN (SELECT code FROM dest_codes)
-                            AND DATE(prices.day) = dates.day
-            WHERE dates.day BETWEEN '{2}'::date AND '{3}'::date
-            GROUP BY dates.day;
+            LEFT JOIN LATERAL (
+                SELECT dap.average_price FROM daily_average_prices dap WHERE dap.day = dates.day
+            ) dap ON true;
         """.format(origins, destins, date_from, date_to)
 
         # Perform the query
