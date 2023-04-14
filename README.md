@@ -1,4 +1,4 @@
-# Xeneta Rates Task
+# Rates Mini Project
 I developed this Django project as part of the task assigned by Xenata. I chose to utilize Django as the Python framework for two primary reasons:
 1. Django is more productive than other python frameworks
 2. It is well-structured
